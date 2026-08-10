@@ -18,7 +18,7 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | https://day12-chat.up.railway.app |
+| Public URL | https://web-production-d1083.up.railway.app |
 | Platform | Railway |
 | Ngày deploy | 10/08/2026 |
 

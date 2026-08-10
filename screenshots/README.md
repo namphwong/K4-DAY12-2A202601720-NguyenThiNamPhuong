@@ -1,1 +1,4 @@
-# Đặt ảnh chụp màn hình bản deploy vào thư mục này
+# Ảnh chụp màn hình bản deploy
+
+![Railway Dashboard](dashboard.png)
+
