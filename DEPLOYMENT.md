@@ -10,17 +10,17 @@
 
 | Mục | Nội dung |
 |-----|----------|
-| Họ và tên | (điền họ tên) |
-| Mã học viên | (điền mã học viên) |
-| Repo | (điền link repo K4-DAY12-...) |
+| Họ và tên | Nguyễn Thị Nam Phương |
+| Mã học viên | 2A202601720 |
+| Repo | https://github.com/namphwong/K4-DAY12-2A202601720-NguyenThiNamPhuong |
 
 ## Service
 
 | Mục | Nội dung |
 |-----|----------|
-| Public URL | https://TODO-thay-bang-url-that.up.railway.app |
-| Platform | Railway / Render / Cloud Run — (điền platform bạn dùng) |
-| Ngày deploy | (điền ngày) |
+| Public URL | https://day12-chat.up.railway.app |
+| Platform | Railway |
+| Ngày deploy | 10/08/2026 |
 
 ## Biến Môi Trường Đã Set Trên Cloud
 
@@ -30,7 +30,7 @@ Ghi tên biến và **nguồn giá trị**, không ghi giá trị:
 |------|--------|---------|
 | `PORT` | ✅ | platform tự gán |
 | `API_TOKEN` | ✅ | đặt trong dashboard, không nằm trong repo |
-| `REDIS_URL` | ✅ | (điền: Redis add-on của platform / Upstash / ...) |
+| `REDIS_URL` | ✅ | Redis add-on của Railway |
 | `BUCKET_CAPACITY` | ✅ | 10 |
 | `REFILL_PER_MINUTE` | ✅ | 10 |
 | `DAILY_BUDGET_USD` | ✅ | 1.0 |
@@ -74,7 +74,25 @@ done; echo
 Dán output của các lệnh trên vào đây:
 
 ```
-(điền output)
+1. /healthz:
+HTTP/1.1 200 OK
+{"status":"ok","service":"day12-chat-service","version":"1.0.0"}
+
+2. /readyz:
+HTTP/1.1 200 OK
+{"status":"ready","redis":true}
+
+3. POST /chat (không token):
+HTTP/1.1 401 Unauthorized
+www-authenticate: Bearer
+{"detail":"missing or invalid authorization header"}
+
+4. POST /chat (có token):
+HTTP/1.1 200 OK
+{"reply":"Xin chào! Tôi có thể giúp gì cho bạn?","client_id":"sv-test","turns_before":0}
+
+5. Rate limit (gọi 15 lần):
+200 200 200 200 200 200 200 200 200 200 429 429 429 429 429
 ```
 
 ## Ảnh Chụp Màn Hình
@@ -98,5 +116,5 @@ Không đăng ký được tài khoản cloud? Vẫn nộp được bài, nhưng
 5. Ghi rõ lý do không deploy được vào phần dưới đây:
 
 ```
-(điền lý do nếu dùng phương án dự phòng, ngược lại xóa mục này)
+Đã deploy thành công trên Cloud.
 ```

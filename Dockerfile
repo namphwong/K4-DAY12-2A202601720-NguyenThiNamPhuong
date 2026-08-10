@@ -49,4 +49,4 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
     CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz').read()" || exit 1
 
 # Khởi chạy ứng dụng đọc cổng linh hoạt từ biến môi trường PORT (mặc định 8000)
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+CMD ["sh", "-c", "PORT=${PORT:-8000}; case $PORT in ''|*[!0-9]*) PORT=8000 ;; esac; exec uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
