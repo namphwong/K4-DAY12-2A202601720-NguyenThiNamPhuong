@@ -23,14 +23,30 @@
 #            docker images day12-chat:prod     # xem dung lượng
 # ═══════════════════════════════════════════════════════════════════
 
-FROM python:3.11
-
+# Stage 1: Builder (cài đặt và biên dịch dependency)
+FROM python:3.11-slim AS builder
 WORKDIR /app
 
+# Tận dụng Docker Layer Cache: copy requirements.txt trước
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+# Stage 2: Runtime (chỉ chứa ứng dụng gọn nhẹ)
+FROM python:3.11-slim AS runtime
+WORKDIR /app
+
+# Copy kết quả cài đặt từ stage builder sang /usr/local
+COPY --from=builder /install /usr/local
+# Copy source code ứng dụng (đứng sau pip install để tối ưu cache)
 COPY . .
 
-RUN pip install -r requirements.txt
+# Bảo mật: Không chạy bằng root, tạo user thường
+RUN useradd --create-home --uid 10001 appuser
+USER appuser
 
-EXPOSE 8000
+# Cấu hình HEALTHCHECK gọi vào endpoint /healthz
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz').read()" || exit 1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Khởi chạy ứng dụng đọc cổng linh hoạt từ biến môi trường PORT (mặc định 8000)
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
